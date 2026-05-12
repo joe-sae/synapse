@@ -4,8 +4,8 @@ export async function fetchBlueskyFeed(handle: string) {
     // Step 1: Resolve the handle to a DID (Decentralized Identifier)
     const resolveRes = await fetch(`https://public.api.bsky.app/xrpc/com.atproto.identity.resolveHandle?handle=${handle}`);
     if (!resolveRes.ok) {
-        const errorText = await resolveRes.text();
-        throw new Error(`Failed to resolve handle: ${resolveRes.status} ${resolveRes.statusText} - ${errorText}`);
+      const errorText = await resolveRes.text();
+      throw new Error(`Failed to resolve handle: ${resolveRes.status} ${resolveRes.statusText} - ${errorText}`);
     }
     const resolveData = await resolveRes.json();
     const did = resolveData.did;
@@ -15,18 +15,18 @@ export async function fetchBlueskyFeed(handle: string) {
     }
 
     // Step 2: Fetch the author's feed using the DID
-    const feedRes = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${did}&limit=10`);
+    const feedRes = await fetch(`https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${did}`);
     if (!feedRes.ok) {
-        const errorText = await feedRes.text();
-        throw new Error(`Failed to fetch feed: ${feedRes.status} ${feedRes.statusText} - ${errorText}`);
+      const errorText = await feedRes.text();
+      throw new Error(`Failed to fetch feed: ${feedRes.status} ${feedRes.statusText} - ${errorText}`);
     }
     const feedData = await feedRes.json();
-    
+
     // Log the feed items
     console.log(`Fetched ${feedData.feed.length} posts for ${handle}:`);
     for (const item of feedData.feed) {
-        const post = item.post.record;
-        console.log(`- ${post.text || 'No text content'}`);
+      const post = item.post.record;
+      console.log(`- ${post.text || 'No text content'}`);
     }
 
     return feedData.feed;
